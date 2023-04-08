@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 裏設定エリアの開始 -->
+    <meta charset="utf-8" , name="viewport" , content="width=320,
+       height=480,
+       initial-scale=1.0,
+       minimum-scale=1.0,
+       maximum-scale=2.0,
+       user-scalable=yes">
+    <style type="text/css">
+        p {
+            line-height: 0.5;
+        }
+        
+        form {
+            border: medium #c0c0c0 dotted;
+            width: fit-content;
+            margin: auto;
+            border: 1px solid #333;
+            background: #e3f5ff;
+        }
+        
+        div.for_button {
+            text-align: center;
+        }
+        
+        table,
+        td {
+            border: 1px solid #333;
+            width: fit-content;
+            margin: auto;
+        }
+        
+        thead,
+        tfoot {
+            background-color: #4f3e95;
+            color: #fff;
+            width: fit-content;
+            margin: auto;
+        }
+        
+        div.hidden {
+            float: right;
+        }
+        
+        textarea {
+            max-width: 0px;
+            max-height: 0px;
+        }
+    </style>
+</head>
+<!-- 裏設定エリアの終了 -->
+
+<body>
+    <form name="now">
+        <p>現状 <span></span></p>
+        <p>赤 <span></span></p>
+        <input type="number" name="red" value="30" max="2000" />
+        <p>緑 <span></span></p>
+        <input type="number" name="green" value="30" max="2000" />
+    </form>
+    <form name="target">
+
+        <p>目標<span></span></p>
+        <p>赤と緑 <span></span></p>
+        <input type="number" name="red_green" value="30" max="2000" />
+
+    </form>
+
+    <p> <span></span></p>
+    <div class="for_button">
+        <input type="button" value="計算！" onclick="clickBtnCalc()" />
+        <input type="button" value="結果をコピー" onclick="clickBtnCopy()" />
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2">結果</th>
+            </tr>
+            <tr>
+                <th>えさ</th>
+                <th>rgb</th>
+            </tr>
+        </thead>
+        <tbody id="show_result">
+
+        </tbody>
+    </table>
+    <div class="hidden">
+        <textarea class="for_button" type="text" id="for_clip" readonly="readonly">
+        </textarea>
+    </div>
+    <script>
+        let foods = [{
+            name: "テントウムシ",
+            value: [4, -2, -2]
+        }, {
+            name: "オンブバッタ",
+            value: [-2, 4, -2]
+        }, {
+            name: "ルリセンチコガネ",
+            value: [-2, -2, 4]
+        }, {
+            name: "ツマグロヒョウモンの幼虫",
+            value: [7, 0, 0]
+        }, {
+            name: "モンシロチョウの幼虫",
+            value: [0, 7, 0]
+        }, {
+            name: "セスジスズメの幼虫",
+            value: [0, 0, 7]
+        }, {
+            name: "カブトムシの幼虫",
+            value: [2, 2, 2]
+        }, {
+            name: "クロヤマアリ",
+            value: [-2, -2, -2]
+        }, ];
+
+        function clickBtnCalc() {
+            const n_r = parseInt(now.red.value)
+            const n_g = parseInt(now.green.value)
+            const t_r_g = parseInt(target.red_green.value)
+            const rgb_now = new Array(n_r, n_g, 0)
+            const rgb_target = new Array(t_r_g, t_r_g, 0)
+
+            function plus(...arr) {
+                let ret_arr = arr[0].slice();
+                for (let i = 1; i < arr.length; i++) {
+                    for (let j = 0; j < arr[i].length; j++) ret_arr[j] += arr[i][j];
+                }
+                return ret_arr;
+            }
+
+            rgb = rgb_now
+            rgbs = [rgb_now]
+            names = ["start"]
+                // 同じにする
+            while (true) {
+                diff = Math.abs(rgb[0] - rgb[1])
+                console.log(rgb)
+
+                if (rgb[0] == rgb[1]) {
+                    break
+                }
+
+                if (diff % 6 == 0) {
+                    if (rgb[0] < rgb[1]) {
+                        foodnum = 0
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                    if (rgb[0] > rgb[1]) {
+                        foodnum = 1
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                } else {
+                    if (rgb_now[0] < rgb_now[1]) {
+                        foodnum = 3
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                    if (rgb_now[0] > rgb_now[1]) {
+                        foodnum = 4
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                }
+            }
+            // 目標値にする
+            while (true) {
+                diff = t_r_g - rgb[0]
+                absdiff = Math.abs(diff)
+                isodd = absdiff % 2 == 1
+                console.log(rgb)
+
+                if (diff == 0) {
+                    break
+                }
+
+                if (isodd || diff >= 7) {
+                    foodnum = 3
+                    rgb = plus(rgb, foods[foodnum].value)
+                    names.push(foods[foodnum].name)
+                    rgbs.push(rgb)
+                    foodnum = 4
+                    rgb = plus(rgb, foods[foodnum].value)
+                    names.push(foods[foodnum].name)
+                    rgbs.push(rgb)
+                } else {
+                    if (rgb[0] < t_r_g) {
+                        foodnum = 6
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                    if (rgb[0] > t_r_g) {
+                        foodnum = 7
+                        rgb = plus(rgb, foods[foodnum].value)
+                        names.push(foods[foodnum].name)
+                        rgbs.push(rgb)
+                    }
+                }
+            }
+            // 表示用の結果づくり
+            text = []
+            for (var i = 0; i < names.length; i++) {
+                text.push('<tr>' + '<td>' + names[i] + '</td>' + '<td>' + rgbs[i] + '</td>' + '</tr>');
+            }
+
+            cliptext = []
+            for (var i = 0; i < names.length; i++) {
+                cliptext.push(names[i] + ':' + rgbs[i] + '\n');
+            }
+
+
+            document.getElementById("show_result").innerHTML = text.join('');
+            document.getElementById("for_clip").value = cliptext.join('');
+        }
+
+        function clickBtnCopy() {
+            copy("for_clip")
+            alert("コピーしました。");
+        }
+
+        function copy(id) {
+            var copyText = document.getElementById(id);
+            var ua = navigator.userAgent;
+            if (ua.match(/iphone|ipod|ipad|android/i)) {
+                try {
+                    copyText.select();
+                } catch (error) {}
+                var range = document.createRange();
+                range.selectNode(copyText);
+                window.getSelection().addRange(range);
+            } else {
+                try {
+                    copyText.select(); // input field
+                } catch (error) {
+                    document.getSelection().selectAllChildren(copyText);
+                }
+            }
+            var result = document.execCommand("copy");
+            return result
+        }
+    </script>
+
+</body>
+<!-- 画面に表示されるエリアの終了 -->
+
+</html>
