@@ -3,7 +3,12 @@
 
 <head>
     <!-- 裏設定エリアの開始 -->
-    <meta charset="utf-8">
+    <meta charset="utf-8" , name="viewport" , content="width=320,
+       height=480,
+       initial-scale=1.0,
+       minimum-scale=1.0,
+       maximum-scale=2.0,
+       user-scalable=yes">
     <style type="text/css">
         p {
             line-height: 0.5;
@@ -36,8 +41,13 @@
             margin: auto;
         }
         
-        input.hidden {
-            visibility: hidden;
+        div.hidden {
+            float: right;
+        }
+        
+        textarea {
+            max-width: 0px;
+            max-height: 0px;
         }
     </style>
 </head>
@@ -74,11 +84,14 @@
                 <th>rgb</th>
             </tr>
         </thead>
-        <tbody id=show_result>
+        <tbody id="show_result">
 
         </tbody>
     </table>
-    <input class="hidden" type="text" id=for_clip readonly="readonly">
+    <div class="hidden">
+        <textarea class="for_button" type="text" id="for_clip" readonly="readonly">
+        </textarea>
+    </div>
     <script>
         let foods = [{
             name: "テントウムシ",
@@ -213,12 +226,29 @@
         }
 
         function clickBtnCopy() {
-            var forclip = document.getElementById("for_clip");
-            var range = document.createRange();
-            range.selectNode(forclip);
-            window.getSelection().addRange(range);
-            document.execCommand('copy');
+            copy("for_clip")
             alert("コピーしました。");
+        }
+
+        function copy(id) {
+            var copyText = document.getElementById(id);
+            var ua = navigator.userAgent;
+            if (ua.match(/iphone|ipod|ipad|android/i)) {
+                try {
+                    copyText.select();
+                } catch (error) {}
+                var range = document.createRange();
+                range.selectNode(copyText);
+                window.getSelection().addRange(range);
+            } else {
+                try {
+                    copyText.select(); // input field
+                } catch (error) {
+                    document.getSelection().selectAllChildren(copyText);
+                }
+            }
+            var result = document.execCommand("copy");
+            return result
         }
     </script>
 
