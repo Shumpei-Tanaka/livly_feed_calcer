@@ -4,13 +4,66 @@
 <head>
     <!-- 裏設定エリアの開始 -->
     <meta charset="utf-8">
-    <!-- 文字化け防止 -->
+    <style type="text/css">
+        p {
+            line-height: 0.5;
+        }
+        
+        form {
+            border: medium #c0c0c0 dotted;
+            width: fit-content;
+            margin: auto;
+            border: 1px solid #333;
+            background: #e3f5ff;
+        }
+        
+        div {
+            text-align: center;
+        }
+    </style>
 </head>
 <!-- 裏設定エリアの終了 -->
 
 <body>
-    <!-- 画面に表示されるエリアの開始 -->
-    Hello World！
+    <form name="target">
+
+        <p>目標<span></span></p>
+
+        <p>赤 <span></span></p>
+        <input type="number" name="red" value="30" max="2000" />
+        <p>緑 <span></span></p>
+        <input type="number" name="green" value="30" max="2000" />
+        <p>青 <span></span></p>
+        <input type="number" name="blue" value="30" max="2000" />
+
+    </form>
+    <form name="now">
+        <p>現状 <span></span></p>
+
+        <p>赤 <span></span></p>
+        <input type="number" name="red" value="30" max="2000" />
+        <p>緑 <span></span></p>
+        <input type="number" name="green" value="30" max="2000" />
+        <p>青 <span></span></p>
+        <input type="number" name="blue" value="30" max="2000" />
+    </form>
+
+    <p> <span></span></p>
+    <div>
+        <input type="button" value="計算！" onclick="clickBtnCalc()" />
+        <p> <span></span></p>
+        <p> <span id="span_result"></span></p>
+    </div>
+
+    <script>
+        function clickBtnCalc() {
+            r = parseInt(target.red.value)
+            g = parseInt(target.green.value)
+            b = parseInt(target.blue.value)
+            document.getElementById("span_result").textContent = r + g + b;
+        }
+    </script>
+
 </body>
 <!-- 画面に表示されるエリアの終了 -->
 
