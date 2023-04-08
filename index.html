@@ -35,6 +35,10 @@
             width: fit-content;
             margin: auto;
         }
+        
+        input.hidden {
+            visibility: hidden;
+        }
     </style>
 </head>
 <!-- 裏設定エリアの終了 -->
@@ -74,7 +78,7 @@
 
         </tbody>
     </table>
-    <input type="hidden" id=for_clip>
+    <input class="hidden" type="text" id=for_clip readonly="readonly">
     <script>
         let foods = [{
             name: "テントウムシ",
